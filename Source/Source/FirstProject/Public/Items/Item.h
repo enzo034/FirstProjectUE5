@@ -32,6 +32,9 @@ protected:
 	UFUNCTION(BlueprintPure)
 	float TransformedCos();
 
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* ItemMesh;
+
 	template<typename T>
 	T Avg(T First, T Second);
 
@@ -44,9 +47,6 @@ protected:
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Sine Parameters", BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float RunningTime;
-
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* ItemMesh;
 
 	UPROPERTY(VisibleAnywhere)
 	USphereComponent* Sphere;

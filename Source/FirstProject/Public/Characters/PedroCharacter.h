@@ -11,6 +11,7 @@ class UInputMappingContext;
 class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
+class AItem;
 
 UCLASS()
 class FIRSTPROJECT_API APedroCharacter : public ACharacter
@@ -39,9 +40,12 @@ protected:
 	UInputAction* CharacterLookAction;
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* CharacterJumpAction;
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* CharacterEKeyPressedAction;
 
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void EKeyPressed(const FInputActionValue& Value);
 
 private:
 	UPROPERTY(VisibleAnywhere);
@@ -49,5 +53,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere);
 	UCameraComponent* ViewCamera;
-	
+
+	UPROPERTY(VisibleInstanceOnly);
+	AItem* OverlappingItem;
+public:
+	inline void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 };

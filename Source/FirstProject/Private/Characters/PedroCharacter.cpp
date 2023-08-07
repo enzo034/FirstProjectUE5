@@ -7,6 +7,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Items/Item.h"
+#include "Items/Weapons/Weapon.h"
 
 // Sets default values
 APedroCharacter::APedroCharacter()
@@ -45,6 +47,28 @@ void APedroCharacter::BeginPlay()
 
 }
 
+// Called every frame
+void APedroCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
+// Called to bind functionality to input
+void APedroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		EnhancedInputComponent->BindAction(CharacterMoveAction, ETriggerEvent::Triggered, this, &APedroCharacter::Move);
+		EnhancedInputComponent->BindAction(CharacterLookAction, ETriggerEvent::Triggered, this, &APedroCharacter::Look);
+		EnhancedInputComponent->BindAction(CharacterJumpAction, ETriggerEvent::Triggered, this, &APedroCharacter::Jump);
+		EnhancedInputComponent->BindAction(CharacterEKeyPressedAction, ETriggerEvent::Triggered, this, &APedroCharacter::EKeyPressed);
+	}
+
+}
+
 void APedroCharacter::Move(const FInputActionValue& Value)
 {
 	const FVector2D MoveVector = Value.Get<FVector2D>();
@@ -67,29 +91,17 @@ void APedroCharacter::Look(const FInputActionValue& Value)
 	AddControllerPitchInput(LookVector.Y);
 }
 
-// Called every frame
-void APedroCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-// Called to bind functionality to input
-void APedroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
-	{
-		EnhancedInputComponent->BindAction(CharacterMoveAction, ETriggerEvent::Triggered, this, &APedroCharacter::Move);
-		EnhancedInputComponent->BindAction(CharacterLookAction, ETriggerEvent::Triggered, this, &APedroCharacter::Look);
-		EnhancedInputComponent->BindAction(CharacterJumpAction, ETriggerEvent::Triggered, this, &APedroCharacter::Jump);
-	}
-
-}
-
 void APedroCharacter::Jump()
 {
 	Super::Jump();
+}
+
+void APedroCharacter::EKeyPressed(const FInputActionValue& Value)
+{
+
+	if (AWeapon* WeaponOverlapping = Cast<AWeapon>(OverlappingItem))
+	{
+		WeaponOverlapping->Equip(GetMesh(), FName("RightHandSocket"));
+	}
 }
 

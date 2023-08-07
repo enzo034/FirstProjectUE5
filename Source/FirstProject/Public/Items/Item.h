@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Item.generated.h"
 
+class USphereComponent;
+
 UCLASS()
 class FIRSTPROJECT_API AItem : public AActor
 {
@@ -14,6 +16,7 @@ class FIRSTPROJECT_API AItem : public AActor
 public:	
 	AItem();
 	virtual void Tick(float DeltaTime) override;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -31,14 +34,22 @@ protected:
 
 	template<typename T>
 	T Avg(T First, T Second);
-private:
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UStaticMeshComponent* ItemMesh;
+
+	UFUNCTION()
+	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+private:
 	UPROPERTY(VisibleAnywhere, Category = "Sine Parameters", BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float RunningTime;
 
 	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* ItemMesh;
-
+	USphereComponent* Sphere;
 };
 
 template<typename T>
